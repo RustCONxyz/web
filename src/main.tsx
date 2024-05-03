@@ -1,6 +1,6 @@
 import "./index.css";
 
-import { StrictMode } from "react";
+import { useMemo, useEffect, StrictMode } from "react";
 import ReactDOM from "react-dom/client";
 import { createRouter, RouterProvider } from "@tanstack/react-router";
 import { Provider as ReduxProvider } from "react-redux";
@@ -32,7 +32,15 @@ function InnerApp() {
 
     const connectionStatus = useAppSelector(selectConnectionState);
 
-    return <RouterProvider router={router} context={{ connectionStatus }} />
+    const routerContext = useMemo(() => ({ connectionStatus }), [connectionStatus]);
+
+    useEffect(() => {
+
+        router.invalidate();
+
+    }, [routerContext]);
+
+    return <RouterProvider router={router} context={routerContext} />
 
 }
 
