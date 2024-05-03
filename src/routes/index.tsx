@@ -1,9 +1,22 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, redirect } from "@tanstack/react-router";
 import { useEffect, useRef } from "react";
+import { z } from "zod";
 import Logo from "/logo.svg";
 import ConnectionForm from "@/components/ConnectionForm";
 
-export const Route = createFileRoute("/")({ component: Index });
+const fallback = "/home" as const;
+
+export const Route = createFileRoute("/")({
+    validateSearch: z.object({
+        redirect: z.string().optional().catch("")
+    }),
+    beforeLoad: ({ context, search }) => {
+        if (context.connectionStatus.isConnected) {
+            throw redirect({ to: search.redirect || fallback })
+        }
+    },
+    component: Index
+});
 
 function Index() {
 

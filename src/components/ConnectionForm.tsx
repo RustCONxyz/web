@@ -1,14 +1,33 @@
 import { useForm } from "react-hook-form";
 import { Text, TextInput, NumberInput, PasswordInput } from "@/components/Themed";
 
-const formDefaultValues = { serverIP: "", rconPort: 0, rconPassword: "", saveInformation: false };
+import { useAppDispatch, useAppSelector } from "@/hooks/redux";
+import { selectIsConnecting } from "@/store/slices/websocket";
+import buildWebSocketAction from "@/store/websocket/actions";
+import * as websocketActions from "@/store/websocket/actions";
+
+const formDefaultValues = { serverIP: "", rconPort: 28016, rconPassword: "", saveInformation: false };
 
 export default function ConnectionForm() {
 
     const { handleSubmit, register } = useForm({ defaultValues: formDefaultValues });
 
+    const dispatch = useAppDispatch();
+
+    const isConnecting = useAppSelector(selectIsConnecting);
+
     function onSubmit(data: typeof formDefaultValues) {
-        console.log(data);
+        return handleConnect(`${data.serverIP}:${data.rconPort}`, data.rconPassword, data.saveInformation);
+    }
+
+    function handleConnect(connection: string, rconPassword: string, saveInformation: boolean = false) {
+
+        if (isConnecting) return;
+
+        const payload = { connection, rconPassword, saveInformation };
+
+        dispatch(buildWebSocketAction(websocketActions.WEBSOCKET_CONNECT, JSON.stringify(payload)));
+
     }
 
     return (

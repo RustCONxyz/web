@@ -41,6 +41,8 @@ export const websocketSlice = createSlice({
 
 export const { setIsConnected, setIsConnecting, setFailedToConnect } = websocketSlice.actions;
 
+export const selectConnectionState = (state: AppState) => state.websocket;
+
 export const selectIsConnected = (state: AppState) => state.websocket.isConnected;
 
 export const selectIsConnecting = (state: AppState) => state.websocket.isConnecting;

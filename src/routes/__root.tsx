@@ -1,21 +1,26 @@
 import React, { Suspense } from "react";
-import { createRootRoute, Outlet } from "@tanstack/react-router";
-import { Provider as ReduxProvider } from "react-redux";
+import { createRootRouteWithContext, Outlet } from "@tanstack/react-router";
 
-import store from "@/store/store";
+interface MyRouterContext {
+    connectionStatus: {
+        isConnected: boolean;
+        isConnecting: boolean;
+        failedToConnect: boolean;
+    }
+}
 
 const TanStackRouterDevtools =
     process.env.NODE_ENV === "production"
         ? () => null
         : React.lazy(() => import("@tanstack/router-devtools").then((res) => ({ default: res.TanStackRouterDevtools })));
 
-export const Route = createRootRoute({
+export const Route = createRootRouteWithContext<MyRouterContext>()({
     component: () => (
-        <ReduxProvider store={store}>
+        <>
             <Outlet />
             <Suspense>
                 <TanStackRouterDevtools />
             </Suspense>
-        </ReduxProvider>
+        </>
     )
 });
