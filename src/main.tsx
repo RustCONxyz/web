@@ -28,7 +28,7 @@ declare module "@tanstack/react-router" {
     }
 }
 
-function InnerApp() {
+export function InnerApp() {
 
     const connectionStatus = useAppSelector(selectConnectionState);
 
@@ -44,7 +44,7 @@ function InnerApp() {
 
 }
 
-function App() {
+export function App() {
     return (
         <StrictMode>
             <ReduxProvider store={store}>
