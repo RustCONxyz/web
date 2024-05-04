@@ -13,7 +13,11 @@
 import { Route as rootRoute } from './routes/__root'
 import { Route as AuthImport } from './routes/_auth'
 import { Route as IndexImport } from './routes/index'
+import { Route as AuthPlayersImport } from './routes/_auth.players'
 import { Route as AuthHomeImport } from './routes/_auth.home'
+import { Route as AuthConsoleImport } from './routes/_auth.console'
+import { Route as AuthChatImport } from './routes/_auth.chat'
+import { Route as AuthBansImport } from './routes/_auth.bans'
 
 // Create/Update Routes
 
@@ -27,8 +31,28 @@ const IndexRoute = IndexImport.update({
   getParentRoute: () => rootRoute,
 } as any)
 
+const AuthPlayersRoute = AuthPlayersImport.update({
+  path: '/players',
+  getParentRoute: () => AuthRoute,
+} as any)
+
 const AuthHomeRoute = AuthHomeImport.update({
   path: '/home',
+  getParentRoute: () => AuthRoute,
+} as any)
+
+const AuthConsoleRoute = AuthConsoleImport.update({
+  path: '/console',
+  getParentRoute: () => AuthRoute,
+} as any)
+
+const AuthChatRoute = AuthChatImport.update({
+  path: '/chat',
+  getParentRoute: () => AuthRoute,
+} as any)
+
+const AuthBansRoute = AuthBansImport.update({
+  path: '/bans',
   getParentRoute: () => AuthRoute,
 } as any)
 
@@ -44,8 +68,24 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthImport
       parentRoute: typeof rootRoute
     }
+    '/_auth/bans': {
+      preLoaderRoute: typeof AuthBansImport
+      parentRoute: typeof AuthImport
+    }
+    '/_auth/chat': {
+      preLoaderRoute: typeof AuthChatImport
+      parentRoute: typeof AuthImport
+    }
+    '/_auth/console': {
+      preLoaderRoute: typeof AuthConsoleImport
+      parentRoute: typeof AuthImport
+    }
     '/_auth/home': {
       preLoaderRoute: typeof AuthHomeImport
+      parentRoute: typeof AuthImport
+    }
+    '/_auth/players': {
+      preLoaderRoute: typeof AuthPlayersImport
       parentRoute: typeof AuthImport
     }
   }
@@ -55,7 +95,13 @@ declare module '@tanstack/react-router' {
 
 export const routeTree = rootRoute.addChildren([
   IndexRoute,
-  AuthRoute.addChildren([AuthHomeRoute]),
+  AuthRoute.addChildren([
+    AuthBansRoute,
+    AuthChatRoute,
+    AuthConsoleRoute,
+    AuthHomeRoute,
+    AuthPlayersRoute,
+  ]),
 ])
 
 /* prettier-ignore-end */
